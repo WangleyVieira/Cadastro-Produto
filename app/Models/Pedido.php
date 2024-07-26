@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Produto extends Model
+class Pedido extends Model
 {
     use HasFactory;
 
@@ -15,5 +15,10 @@ class Produto extends Model
 
     protected $guarded = ['id', 'created_at', 'update_at'];
 
-    protected $table = 'produtos';
+    protected $table = 'pedidos';
+
+    public function setValorAttribute($value)
+    {
+        $this->attributes['valor'] = str_replace(['.', ','], ['', '.'], $value);
+    }
 }
