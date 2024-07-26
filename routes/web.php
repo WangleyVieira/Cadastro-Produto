@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('pedido.index');
+});
+
+Route::group(['prefix' => 'pedido', 'as' => 'pedido.'], function() {
+    Route::get('/index', [PedidoController::class, 'index'])->name('index');
+    Route::get('/create', [PedidoController::class, 'create'])->name('create');
+    Route::get('/edit/{id}', [PedidoController::class, 'edit'])->name('edit');
+    Route::post('/store', [PedidoController::class, 'store'])->name('store');
+    Route::post('/update/{id}', [PedidoController::class, 'update'])->name('update');
 });
