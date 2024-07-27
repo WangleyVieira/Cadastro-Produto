@@ -1,8 +1,7 @@
 $(document).ready(function () {
-
-    $('.button_prevent_multiple_submits').on('click', function () {
-        $(this).attr('disabled', 'true');
-        $('.form_prevent_multiple_submits').submit();
+    $('.submit-button').click(function() {
+        $(this).prop('disabled', true);
+        $(this).text('Enviando...');
+        $(this).closest('form').submit();
     });
-
 });

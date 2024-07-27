@@ -92,7 +92,6 @@ class PedidoController extends Controller
     {
         try {
             $pedido = Pedido::findOrFail($id);
-
             $pedido->update($request->validated());
             Alert::toast('Cadastro alterado com sucesso.', 'success');
             return redirect()->route('pedido.index');
@@ -127,17 +126,17 @@ class PedidoController extends Controller
     {
         try {
             $pedido = Pedido::findOrFail($id);
-            dd($pedido);
             DescontoService::validarDesconto($pedido, $request->desconto);
             $pedido->update([
-                'valor' => DescontoService::aplicarDesconto($pedido->valor, $request->desconto)
+                'valor' => DescontoService::aplicarDesconto($pedido, $request->desconto)
             ]);
             Alert::toast('Desconto aplicado com sucesso.', 'success');
             return redirect()->route('pedido.index');
         }
         catch (\Exception $ex) {
-            Alert::toast($ex->getMessage(), 'error');
-            return redirect()->back();
+            return $ex->getMessage();
+            // Alert::toast($ex->getMessage(), 'error');
+            // return redirect()->back();
         }
     }
 }

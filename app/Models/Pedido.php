@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Utils\DataUtil;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,9 +17,6 @@ class Pedido extends Model
     protected $guarded = ['id', 'created_at', 'update_at'];
 
     protected $table = 'pedidos';
-
-    const VENCIDO = 1;
-    const NAO_VENCIDO = 0;
 
     public function setValorAttribute($value)
     {
@@ -52,6 +48,9 @@ class Pedido extends Model
         return !$this->isVencido() && !$this->isValido();
     }
 
+    /**
+     * Retorna array com cores e status e verifica as condições do pedido
+     */
     public function definirCorBadge()
     {
         $arrayCorStatus = [

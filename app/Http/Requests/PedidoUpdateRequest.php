@@ -15,7 +15,7 @@ class PedidoUpdateRequest extends FormRequest
     {
         return [
             'nome_produto' => ['sometimes', 'required', 'min:3', 'max:200', 'unique:pedidos,nome_produto,' . $this->id],
-            'valor' => ['required'],
+            'valor' => ['required', 'regex:/^(?!0+(,0{1,2})?$)(?!0+$)\d{1,3}(\.\d{3})*,\d{2}$/'],
             'data_vencimento' => ['date', 'required', 'after:today'],
         ];
     }
@@ -34,6 +34,7 @@ class PedidoUpdateRequest extends FormRequest
             'nome_produto.exists' => 'Nome do produto já está cadastrado no sistema.',
 
             'valor.required' => 'Valor é obrigatório.',
+            'valor.regex' => 'O valor não pode ser zero.',
 
             'data_vencimento.required' => 'Data de vencimento é obrigatório.',
             'data_vencimento.date' => 'Data de vencimento inválida.',

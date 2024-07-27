@@ -39,7 +39,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="submit" class="button_submit btn btn-primary m-1">Salvar</button>
+                                    <button type="submit" class="submit-button btn btn-primary m-1">Salvar</button>
                                     <a href="{{ route('pedido.index') }}" class="btn btn-secondary">Voltar</a>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
 
 @section('scripts')
     <script>
-        $('.valor').mask("#.##0,00", {reverse: true});
+        $('.valor').mask('00.000.000,00', {reverse: true});
     </script>
 @endsection
 

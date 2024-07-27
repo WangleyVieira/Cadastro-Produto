@@ -6,24 +6,45 @@ use Exception;
 
 class DescontoService
 {
-    public static function validarDesconto($pedido, $valorDesconto)
+   /*
+    * Realiza a validação do desconto.
+    * O desconto não pode ser menor ou igual a zero,
+    * nem igual ao valor do produto e o produto não pode estar vencido.
+    */
+    public static function validarDesconto($pedido, string $valorDesconto): void
     {
         if ($pedido->isVencido()) {
             throw new Exception('Produto vencido!');
         }
-        $converterValorDesconto = str_replace('.', '', $valorDesconto);
-        $converterValorDescontoFloat = (float)$converterValorDesconto;
 
-        if ($converterValorDescontoFloat <= 0) {
+        $desconto = self::formatarValorParaFloat($valorDesconto);
+
+        if ($desconto <= 0) {
             throw new Exception('Valor do desconto inválido!');
         }
-        if ($converterValorDescontoFloat >= $pedido->valor) {
-            throw new Exception('Valor do desconto não pode ser maior que o valor do produto!');
+
+        if ($desconto >= (float) $pedido->valor) {
+            throw new Exception('Valor do desconto não pode ser maior ou igual que o valor do produto!');
         }
     }
-    public static function aplicarDesconto($pedido, $valorDesconto)
+
+    /*
+    * Trata e calcula o valor do desconto
+    */
+    public static function aplicarDesconto($pedido, string $valorDesconto): float
     {
-        $converterValorDesconto = str_replace(',', '.', $valorDesconto);
-        return $pedido->valor - $converterValorDesconto;
+        $desconto = self::formatarValorParaFloat($valorDesconto);
+        // dd((float) $pedido->valor - $desconto);
+        return (float) $pedido->valor - $desconto;
+    }
+
+    /*
+    * Formata um valor monetário para float
+    */
+    private static function formatarValorParaFloat(string $valor): float
+    {
+        $valorSemPontos = str_replace('.', '', $valor);
+        $valorComPontoDecimal = str_replace(',', '.', $valorSemPontos);
+        return (float) $valorComPontoDecimal;
     }
 }
