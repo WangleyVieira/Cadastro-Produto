@@ -13,8 +13,8 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="table-responsive" style="width: 100%;">
-                                <table id="datatables-reponsive" class="table table-bordered" style="width: 100%;">
+                            <div class="table-responsive w-100">
+                                <table id="datatables-reponsive" class="table table-bordered w-100">
                                     <thead class="table-light">
                                         <tr style="text-align: center">
                                             <th scope="col">Nome do pedido</th>
@@ -29,31 +29,31 @@
                                     <tbody>
                                         @forelse ($pedidos as $pedido)
                                             <tr style="text-align: center">
-                                                <td>{{ $pedido->nome_produto != null ? $pedido->nome_produto : null }}</td>
-                                                <td>{{ $pedido->valor != null ? $pedido->valorFormatado() : null }}</td>
-                                                <td>{{ $pedido->data_vencimento != null ? $pedido->dataFormatado() : '-' }}</td>
+                                                <td>{{ $pedido->nome_produto ?? '' }}</td>
+                                                <td>{{ $pedido->valorFormatado() ?? '' }}</td>
+                                                <td>{{ $pedido->dataFormatado() ?? '-' }}</td>
                                                 <td>
                                                     <span class="badge badge-pill badge-{{ $pedido->definirCorBadge()['cor'] }}">{{ $pedido->definirCorBadge()['status'] }}</span>
                                                 </td>
                                                 <td>
-                                                    @if ($pedido->isValido())
-                                                        <a data-toggle="modal" data-target="#modalDesconto{{ $pedido->id }}"><i class="fas fa-fw fa-calculator"></i></a>
+                                                    @if (!$pedido->isVencido())
+                                                        <a data-toggle="modal" data-target="#modalDesconto{{ $pedido->id }}" title="Aplicar desconto"><i class="fas fa-fw fa-calculator fa-2x"></i></a>
                                                     @else
                                                         Não é possível aplicar desconto
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('pedido.edit', $pedido->id) }}"><i class="fas fa-fw fa-pen"></i></a>
+                                                    <a href="{{ route('pedido.edit', $pedido->id) }}" title="Editar"><i class="fas fa-fw fa-pen fa-2x"></i></a>
                                                 </td>
                                                 <td>
-                                                    <a data-toggle="modal" data-target="#modalDeletar{{ $pedido->id }}"><i class="fas fa-fw fa-trash"></i></a>
+                                                    <a data-toggle="modal" data-target="#modalDeletar{{ $pedido->id }}" title="Deletar"><i class="fas fa-fw fa-trash fa-2x"></i></a>
                                                 </td>
                                             </tr>
                                             {{-- modal deletar --}}
                                             <div class="modal fade" id="modalDeletar{{ $pedido->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
+                                                    <div class="modal-header btn-info">
                                                         <h5 class="modal-title" id="exampleModalLabel">ATENÇÃO!</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -62,7 +62,7 @@
                                                     <form action="{{ route('pedido.destroy', $pedido->id) }}" method="post">
                                                         @csrf
                                                         <div class="modal-body">
-                                                            Deletar o pedido <span>{{ $pedido->nome_produto }}</span>?
+                                                            Deletar o pedido <strong>{{ $pedido->nome_produto }}</strong>?
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -78,7 +78,7 @@
                                             <div class="modal fade" id="modalDesconto{{ $pedido->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
+                                                    <div class="modal-header btn-warning">
                                                         <h5 class="modal-title" id="exampleModalLabel">DESCONTO!</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -87,12 +87,14 @@
                                                     <form action="{{ route('pedido.desconto', $pedido->id) }}" method="post">
                                                         @csrf
                                                         <div class="modal-body">
+                                                            <h5 class="modal-title">Aplicar desconto no pedido <strong>{{$pedido->nome_produto != null ? $pedido->nome_produto : null}}</strong> no Valor <strong>{{ $pedido->valor != null ? $pedido->valorFormatado() : null }}</strong></h5>
+                                                            <br>
                                                             <label for="desconto">Valor do desconto</label>
-                                                            <input type="text" class="valorDesconto form-control" name="desconto" id="desconto" onblur="calcularDesconto({{ $pedido->valor }}, this.value)" placeholder="R$ 0,00">
+                                                            <input type="text" class="valorDesconto form-control" name="desconto" id="desconto" placeholder="R$ 0,00">
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                            <button type="submit" class="btn btn-primary m-1">Salvar</button>
                                                         </div>
                                                     </form>
 
@@ -123,10 +125,11 @@
 
 @section('scripts')
     <script>
-        $('.valorDesconto').mask("#.##0,00", {reverse: true});
+        $('.valorDesconto').mask('00.000.000,00', {reverse: true});
 
         $(document).ready(function() {
             $('#datatables-reponsive').dataTable({
+                "order": [[4, "asc"]]
                 "oLanguage": {
                     "sLengthMenu": "Mostrar _MENU_ registros por página",
                     "sZeroRecords": "Nenhum registro encontrado",

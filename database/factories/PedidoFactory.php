@@ -11,6 +11,7 @@ class PedidoFactory extends Factory
      *
      * @return array
      */
+    //Gera valores aleatório para persistir no Banco
     public function definition()
     {
         return [
