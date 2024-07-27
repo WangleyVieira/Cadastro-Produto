@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PedidoRequest extends FormRequest
+class PedidoStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,9 @@ class PedidoRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome_produto' => 'required|max:200|unique:pedidos,nome_produto',
-            'valor' => 'required',
-            'data_vencimento' => 'date|required',
+            'nome_produto' => ['required', 'min:3', 'max:200', 'unique:pedidos,nome_produto'],
+            'valor' => ['required'],
+            'data_vencimento' => ['date', 'required', 'after:today'],
         ];
     }
 
@@ -30,12 +30,14 @@ class PedidoRequest extends FormRequest
         return [
             'nome_produto.required' => 'Nome do produto é obrigatório.',
             'nome_produto.max' => 'Nome do produto é excedeu de caracteres.',
+            'nome_produto.min' => 'Nome do produto tem que ter pelo menos 5 caracteres',
             'nome_produto.unique' => 'Nome do produto já está cadastrado no sistema.',
 
             'valor.required' => 'Valor é obrigatório.',
 
             'data_vencimento.required' => 'Data de vencimento é obrigatório.',
             'data_vencimento.date' => 'Data de vencimento inválida.',
+            'data_vencimento.after' => 'Data de vencimento não pode ser antes da data atual.',
         ];
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PedidoRequest;
+use App\Http\Requests\PedidoStoreRequest;
+use App\Http\Requests\PedidoUpdateRequest;
 use App\Models\Pedido;
+use App\Service\DescontoService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -19,10 +21,6 @@ class PedidoController extends Controller
         try {
             $pedidos = Pedido::orderBy('data_vencimento', 'asc')->get();
             return view('pedido.index', compact('pedidos'));
-            Alert::success('Título', 'Mensagem de sucesso');
-
-            return redirect()->back();
-
         }
         catch (\Exception $ex) {
             Alert::toast('Ocorreu um erro!', 'error');
@@ -52,7 +50,7 @@ class PedidoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PedidoRequest $request)
+    public function store(PedidoStoreRequest $request)
     {
         try {
             Pedido::create($request->validated());
@@ -60,21 +58,9 @@ class PedidoController extends Controller
             return redirect()->route('pedido.index');
         }
         catch (\Exception $ex) {
-            // return $ex->getMessage();
             Alert::toast('Ocorreu um erro!', 'error');
             return redirect()->back();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pedido  $pedido
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pedido $pedido)
-    {
-        //
     }
 
     /**
@@ -102,7 +88,7 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function update(PedidoRequest $request, $id)
+    public function update(PedidoUpdateRequest $request, $id)
     {
         try {
             $pedido = Pedido::findOrFail($id);
@@ -112,7 +98,6 @@ class PedidoController extends Controller
             return redirect()->route('pedido.index');
         }
         catch (\Exception $ex) {
-            // return $ex->getMessage();
             Alert::toast('Ocorreu um erro!', 'error');
             return redirect()->back();
         }
@@ -124,8 +109,35 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pedido $pedido)
+    public function destroy($id)
     {
-        //
+        try {
+            $pedido = Pedido::findOrFail($id);
+            $pedido->delete();
+            Alert::toast('Cadastro deletado com sucesso.', 'success');
+            return redirect()->route('pedido.index');
+        }
+        catch (\Exception $ex) {
+            Alert::toast('Ocorreu um erro!', 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function desconto(Request $request, $id)
+    {
+        try {
+            $pedido = Pedido::findOrFail($id);
+            dd($pedido);
+            DescontoService::validarDesconto($pedido, $request->desconto);
+            $pedido->update([
+                'valor' => DescontoService::aplicarDesconto($pedido->valor, $request->desconto)
+            ]);
+            Alert::toast('Desconto aplicado com sucesso.', 'success');
+            return redirect()->route('pedido.index');
+        }
+        catch (\Exception $ex) {
+            Alert::toast($ex->getMessage(), 'error');
+            return redirect()->back();
+        }
     }
 }
