@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PedidoRequest;
 use App\Http\Requests\PedidoStoreRequest;
 use App\Http\Requests\PedidoUpdateRequest;
 use App\Models\Pedido;
-use Carbon\Carbon;
+use App\Service\DescontoService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -120,6 +119,24 @@ class PedidoController extends Controller
         }
         catch (\Exception $ex) {
             Alert::toast('Ocorreu um erro!', 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function desconto(Request $request, $id)
+    {
+        try {
+            $pedido = Pedido::findOrFail($id);
+            dd($pedido);
+            DescontoService::validarDesconto($pedido, $request->desconto);
+            $pedido->update([
+                'valor' => DescontoService::aplicarDesconto($pedido->valor, $request->desconto)
+            ]);
+            Alert::toast('Desconto aplicado com sucesso.', 'success');
+            return redirect()->route('pedido.index');
+        }
+        catch (\Exception $ex) {
+            Alert::toast($ex->getMessage(), 'error');
             return redirect()->back();
         }
     }

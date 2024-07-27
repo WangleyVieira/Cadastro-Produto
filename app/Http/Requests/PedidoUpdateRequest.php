@@ -14,7 +14,7 @@ class PedidoUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome_produto' => ['sometimes', 'required', 'min:5', 'max:200', 'exists:pedidos,nome_produto'],
+            'nome_produto' => ['sometimes', 'required', 'min:3', 'max:200', 'unique:pedidos,nome_produto,' . $this->id],
             'valor' => ['required'],
             'data_vencimento' => ['date', 'required', 'after:today'],
         ];

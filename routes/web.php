@@ -25,4 +25,5 @@ Route::group(['prefix' => 'pedido', 'as' => 'pedido.'], function() {
     Route::post('/store', [PedidoController::class, 'store'])->name('store');
     Route::post('/update/{id}', [PedidoController::class, 'update'])->name('update');
     Route::post('/destroy/{id}', [PedidoController::class, 'destroy'])->name('destroy');
+    Route::post('/desconto/{id}', [PedidoController::class, 'desconto'])->name('desconto');
 });

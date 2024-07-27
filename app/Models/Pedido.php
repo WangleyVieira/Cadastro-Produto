@@ -44,7 +44,7 @@ class Pedido extends Model
 
     public function isValido()
     {
-        return DataUtil::retornaDiferencaDataDias($this->data_vencimento) > 3;
+        return DataUtil::varificarProdutoValido($this->data_vencimento);
     }
 
     public function isProximoVencer()
