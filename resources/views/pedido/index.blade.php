@@ -39,7 +39,7 @@
                                                     @if (!$pedido->isVencido())
                                                         <a data-toggle="modal" data-target="#modalDesconto{{ $pedido->id }}" title="Aplicar desconto"><i class="fas fa-fw fa-calculator fa-2x"></i></a>
                                                     @else
-                                                        Não é possível aplicar desconto
+                                                        <i class="fas fa-lock fa-fw fa-2x" title="Não é possível aplicar desconto"></i>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -90,7 +90,7 @@
                                                             <h5 class="modal-title">Aplicar desconto no pedido <strong>{{$pedido->nome_produto != null ? $pedido->nome_produto : null}}</strong> no Valor <strong>{{ $pedido->valor != null ? $pedido->valorFormatado() : null }}</strong></h5>
                                                             <br>
                                                             <label for="desconto">Valor do desconto</label>
-                                                            <input type="text" class="valorDesconto form-control" name="desconto" id="desconto" placeholder="R$ 0,00">
+                                                            <input type="text" class="valor form-control" name="desconto" id="desconto" placeholder="R$ 0,00">
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -125,11 +125,9 @@
 
 @section('scripts')
     <script>
-        $('.valorDesconto').mask('00.000.000,00', {reverse: true});
-
         $(document).ready(function() {
             $('#datatables-reponsive').dataTable({
-                "order": [[4, "asc"]]
+                "order": [[4, "asc"]],
                 "oLanguage": {
                     "sLengthMenu": "Mostrar _MENU_ registros por página",
                     "sZeroRecords": "Nenhum registro encontrado",

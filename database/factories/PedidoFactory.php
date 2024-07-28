@@ -16,7 +16,7 @@ class PedidoFactory extends Factory
     {
         return [
             'nome_produto' => $this->faker->word(7, true),
-            'valor' => $this->faker->randomFloat(2, 1, 100),
+            'valor' => $this->faker->randomFloat(2, 1, 30),
             'data_vencimento' => $this->faker->dateTimeBetween('-1 week', '+1 week'),
         ];
     }

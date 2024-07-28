@@ -46,6 +46,10 @@
         <script src="{{ asset('js/datatables.min.js') }}"></script>
         <script src="{{asset('jquery-mask/src/jquery.mask.js')}}"></script>
 
+        <script>
+            $('.valor').mask('00.000.000,00', {reverse: true});
+        </script>
+
         @yield('scripts')
     </body>
 </html>
