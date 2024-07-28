@@ -134,9 +134,8 @@ class PedidoController extends Controller
             return redirect()->route('pedido.index');
         }
         catch (\Exception $ex) {
-            return $ex->getMessage();
-            // Alert::toast($ex->getMessage(), 'error');
-            // return redirect()->back();
+            Alert::toast($ex->getMessage(), 'error');
+            return redirect()->back();
         }
     }
 }

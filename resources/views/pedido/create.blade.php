@@ -51,12 +51,6 @@
     </div>
 @endsection
 
-@section('scripts')
-    <script>
-        $('.valor').mask('00.000.000,00', {reverse: true});
-    </script>
-@endsection
-
 
 
 

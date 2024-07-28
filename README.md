@@ -14,6 +14,7 @@ Antes de começar, certifique-se de ter os seguintes requisitos atendidos:
 - Composer
 - MySQL
 - Git
+- NodeJS
 
 ## Instalação
 
@@ -27,6 +28,9 @@ Antes de começar, certifique-se de ter os seguintes requisitos atendidos:
     ```bash
     composer install
    ```
+
+3. **Caso não tenha o NodeJS instalado:**
+    Realizar a instalação v16.15.1
 
 ## Configuração
 

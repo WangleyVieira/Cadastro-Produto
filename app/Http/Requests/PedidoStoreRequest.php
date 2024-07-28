@@ -29,7 +29,7 @@ class PedidoStoreRequest extends FormRequest
     {
         return [
             'nome_produto.required' => 'Nome do produto é obrigatório.',
-            'nome_produto.max' => 'Nome do produto é excedeu de caracteres.',
+            'nome_produto.max' => 'Nome do produto é excedeu 200 de caracteres',
             'nome_produto.min' => 'Nome do produto tem que ter pelo menos 5 caracteres',
             'nome_produto.unique' => 'Nome do produto já está cadastrado no sistema.',
 
